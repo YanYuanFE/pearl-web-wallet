@@ -8,7 +8,7 @@ export interface HistoryItem {
   txid: string
   time?: number
   confirmations: number
-  outToUs: number
+  delta: number // 净额：>0 转入，<0 转出（已扣该笔从本地址花出的部分）
 }
 export interface ScanResult {
   balance: number
@@ -55,12 +55,10 @@ const isOursFor = (address: string) => (spk: any): boolean =>
 export async function scanAddress(address: string): Promise<ScanResult> {
   const txs = await addressTxs(address)
   const isOurs = isOursFor(address)
+  // Pass 1：收集本地址收到的所有输出（txid:n → value）+ 已花费的 outpoint
   const received = new Map<string, Utxo>()
   const spent = new Set<string>()
-  const history: HistoryItem[] = []
-
   for (const tx of txs) {
-    let outToUs = 0
     for (const vo of tx.vout ?? []) {
       if (isOurs(vo.scriptPubKey)) {
         received.set(`${tx.txid}:${vo.n}`, {
@@ -69,11 +67,29 @@ export async function scanAddress(address: string): Promise<ScanResult> {
           value: vo.value,
           confirmations: tx.confirmations ?? 0,
         })
-        outToUs += vo.value
       }
     }
     for (const vi of tx.vin ?? []) if (vi.txid) spent.add(`${vi.txid}:${vi.vout}`)
-    history.push({ txid: tx.txid, time: tx.time, confirmations: tx.confirmations ?? 0, outToUs })
+  }
+
+  // Pass 2：逐笔算净额 = 流入本地址 − 从本地址花出（输入命中我们的 UTXO 即为花出）
+  const history: HistoryItem[] = []
+  for (const tx of txs) {
+    let inFromUs = 0
+    let outToUs = 0
+    for (const vi of tx.vin ?? []) {
+      const u = vi.txid ? received.get(`${vi.txid}:${vi.vout}`) : undefined
+      if (u) inFromUs += u.value
+    }
+    for (const vo of tx.vout ?? []) {
+      if (isOurs(vo.scriptPubKey)) outToUs += vo.value
+    }
+    history.push({
+      txid: tx.txid,
+      time: tx.time,
+      confirmations: tx.confirmations ?? 0,
+      delta: outToUs - inFromUs,
+    })
   }
 
   const utxos: Utxo[] = []

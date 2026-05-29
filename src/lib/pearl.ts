@@ -16,6 +16,11 @@ export const NETWORK = { bech32: 'prl', pubKeyHash: 0x00, scriptHash: 0x05, wif:
 export const path = (i = 0): string => `m/86'/808276'/0'/0/${i}`
 export const ATOMS = 100_000_000 // 1 PRL = 1e8 atoms（8 位小数）
 
+// 官方区块浏览器跳转链接
+export const EXPLORER = 'https://explorer.pearlresearch.ai'
+export const explorerTx = (txid: string): string => `${EXPLORER}/tx/${txid}?network=mainnet`
+export const explorerAddress = (addr: string): string => `${EXPLORER}/address/${addr}?network=mainnet`
+
 const norm = (mn: string): string => mn.trim().replace(/\s+/g, ' ')
 
 export function isValidMnemonic(mn: string): boolean {

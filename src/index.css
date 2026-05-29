@@ -113,6 +113,10 @@ textarea.field {
 .btn {
   position: relative;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   border: 0;
   border-radius: 13px;
@@ -148,6 +152,10 @@ textarea.field {
   cursor: not-allowed;
 }
 .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   border: 1px solid var(--color-line);
   border-radius: 13px;
@@ -164,6 +172,10 @@ textarea.field {
   background: rgba(34, 31, 26, 0.04);
 }
 .mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  vertical-align: middle;
   margin-left: 8px;
   border: 1px solid var(--color-line);
   border-radius: 8px;
@@ -182,6 +194,9 @@ textarea.field {
 /* ── 标签页：发丝下划线 + 珠光激活条 ──────────────────── */
 .tab {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 11px 2px;
   border: 0;
   background: none;

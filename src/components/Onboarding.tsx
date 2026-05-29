@@ -1,4 +1,5 @@
 import { useState, useMemo, type FormEvent } from 'react'
+import { KeyRound, ShieldCheck, AlertTriangle, AlertCircle, Lock, Loader2 } from 'lucide-react'
 import { isValidMnemonic, deriveAccount } from '../lib/pearl'
 import { createVault } from '../lib/vault'
 
@@ -39,7 +40,10 @@ export default function Onboarding({ onUnlocked }: { onUnlocked: (mnemonic: stri
 
   return (
     <form onSubmit={submit} className="card">
-      <h2 className="font-display text-2xl font-medium tracking-tight">导入钱包</h2>
+      <h2 className="flex items-center gap-2 font-display text-2xl font-medium tracking-tight">
+        <KeyRound size={20} className="text-inksoft" />
+        导入钱包
+      </h2>
       <p className="mt-1.5 text-sm leading-relaxed text-inksoft">
         输入 12 词助记词，用 app 密码加密保存在本机。助记词永不离开浏览器、永不上传。
       </p>
@@ -56,13 +60,19 @@ export default function Onboarding({ onUnlocked }: { onUnlocked: (mnemonic: stri
       />
       {mnemonic &&
         (valid ? (
-          <div className="note-ok mt-2.5">
-            <div>✓ 助记词有效 · 派生地址</div>
-            <code className="mt-1 block break-all font-mono text-xs">{address}</code>
-            <div className="mt-1 font-semibold">请核对是否与你已知的收款地址一致再继续</div>
+          <div className="note-ok mt-2.5 flex gap-2">
+            <ShieldCheck size={16} className="mt-0.5 shrink-0" />
+            <div>
+              助记词有效 · 派生地址：
+              <code className="mt-1 block break-all font-mono text-xs text-emerald-900">{address}</code>
+              <span className="mt-1 block font-semibold">请核对是否与你已知的收款地址一致再继续</span>
+            </div>
           </div>
         ) : (
-          <div className="note-warn mt-2.5">助记词尚不完整或无效</div>
+          <div className="note-warn mt-2.5 flex items-center gap-2">
+            <AlertTriangle size={14} className="shrink-0" />
+            助记词尚不完整或无效
+          </div>
         ))}
 
       <label className="label">App 密码（≥8 位，用于解锁）</label>
@@ -70,9 +80,22 @@ export default function Onboarding({ onUnlocked }: { onUnlocked: (mnemonic: stri
       <label className="label">确认 App 密码</label>
       <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" className="field" />
 
-      {err && <div className="note-err mt-3">{err}</div>}
+      {err && (
+        <div className="note-err mt-3 flex items-center gap-2">
+          <AlertCircle size={16} className="shrink-0" />
+          {err}
+        </div>
+      )}
       <button type="submit" disabled={busy || !valid} className="btn mt-5">
-        {busy ? '加密中…' : '加密保存并进入'}
+        {busy ? (
+          <>
+            <Loader2 size={16} className="animate-spin" /> 加密中…
+          </>
+        ) : (
+          <>
+            <Lock size={16} /> 加密保存并进入
+          </>
+        )}
       </button>
     </form>
   )

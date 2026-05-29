@@ -1,4 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
+import { ShieldCheck } from 'lucide-react'
+import { Toaster } from 'sonner'
 import { vaultExists } from './lib/vault'
 import { deriveAccount, type Account } from './lib/pearl'
 import Onboarding from './components/Onboarding'
@@ -38,6 +40,19 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: 'var(--color-card)',
+            color: 'var(--color-ink)',
+            border: '1px solid var(--color-line)',
+            borderRadius: '12px',
+            fontFamily: 'var(--font-sans)',
+            fontSize: '13px',
+          },
+        }}
+      />
       <div className="iridescence" />
       <div className="grain" />
       <div className="relative z-10 mx-auto max-w-xl px-5 py-10 sm:py-14">
@@ -48,7 +63,9 @@ export default function App() {
               Pearl <span className="text-inksoft">钱包</span>
             </span>
           </div>
-          <span className="pill">本地 · 客户端签名</span>
+          <span className="pill inline-flex items-center gap-1.5">
+            <ShieldCheck size={12} /> 本地 · 客户端签名
+          </span>
         </header>
 
         <div className="reveal" style={{ animationDelay: '90ms' }}>
@@ -59,7 +76,7 @@ export default function App() {
           className="reveal mt-7 text-center text-[11px] leading-relaxed text-inksoft"
           style={{ animationDelay: '180ms' }}
         >
-          助记词经 PBKDF2 + AES-GCM 加密存于本机 · 签名在浏览器完成 · 无手续费抽成
+          助记词加密保存在本机，绝不上传 · 转账全程在本地签名
         </footer>
       </div>
     </div>
