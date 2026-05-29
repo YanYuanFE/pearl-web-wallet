@@ -1,0 +1,296 @@
+@import 'tailwindcss';
+
+/* ── Nacre / 珠光 设计令牌 ───────────────────────────── */
+@theme {
+  --color-ground: #f4eee4; /* 暖牡蛎奶白 */
+  --color-card: #fffdf9; /* 暖白卡片 */
+  --color-ink: #221f1a; /* 暖墨黑 */
+  --color-inksoft: #6f6658; /* 灰褐次级 */
+  --color-line: #e7dccb; /* 暖发丝边 */
+  --color-moss: #3d6b57; /* 深苔绿 = 成功 */
+  --color-clay: #9c3f3a; /* 陶土红 = 错误 */
+  --color-bronze: #8a6d3b; /* 古铜 = 提示 */
+
+  --font-display: 'Fraunces', 'Noto Serif SC', serif;
+  --font-sans: 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: light;
+  /* 珠光虹彩渐变（点睛色） */
+  --nacre: linear-gradient(115deg, #f6dbe2 0%, #ece0f1 18%, #dbe7f2 38%, #dcf1e8 56%, #f3ecd8 74%, #f6dbe2 100%);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-ground);
+}
+
+/* ── 页面氛围：顶部虹彩光晕 + 全屏颗粒 ───────────────── */
+.iridescence {
+  position: fixed;
+  inset: -18% -10% auto -10%;
+  height: 62vh;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 50% at 28% 0%, rgba(246, 219, 226, 0.6), transparent 70%),
+    radial-gradient(50% 48% at 74% 8%, rgba(219, 231, 242, 0.55), transparent 72%),
+    radial-gradient(46% 42% at 54% 22%, rgba(220, 241, 232, 0.5), transparent 72%);
+  filter: blur(34px);
+}
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ── 卡片：暖白 + 顶部高光 + 柔和暖阴影 ───────────────── */
+.card {
+  position: relative;
+  z-index: 1;
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(70, 58, 40, 0.05),
+    0 28px 56px -32px rgba(70, 58, 40, 0.3);
+}
+
+/* ── 表单 ─────────────────────────────────────────── */
+.label {
+  display: block;
+  margin: 16px 0 7px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-inksoft);
+}
+.field {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  background: #fffefb;
+  border-radius: 13px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.field::placeholder {
+  color: #b6ab98;
+}
+.field:focus {
+  border-color: #d3c3a6;
+  box-shadow: 0 0 0 4px rgba(214, 196, 166, 0.28);
+}
+.field.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+}
+textarea.field {
+  resize: none;
+  line-height: 1.7;
+}
+
+/* ── 按钮：墨黑 + 珠光柔光 hover ──────────────────────── */
+.btn {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: 0;
+  border-radius: 13px;
+  padding: 13px 18px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f6f1e7;
+  background: var(--color-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 12px 22px -14px rgba(34, 31, 26, 0.7);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--nacre);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 16px 28px -14px rgba(34, 31, 26, 0.75);
+}
+.btn:hover:not(:disabled)::after {
+  opacity: 0.75;
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: 13px;
+  padding: 13px 18px;
+  cursor: pointer;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+  transition: background 0.15s ease;
+}
+.btn-ghost:hover {
+  background: rgba(34, 31, 26, 0.04);
+}
+.mini {
+  margin-left: 8px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 2px 9px;
+  cursor: pointer;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-inksoft);
+  transition: background 0.15s ease;
+}
+.mini:hover {
+  background: rgba(34, 31, 26, 0.05);
+}
+
+/* ── 标签页：发丝下划线 + 珠光激活条 ──────────────────── */
+.tab {
+  position: relative;
+  padding: 11px 2px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-inksoft);
+  transition: color 0.15s ease;
+}
+.tab:hover {
+  color: var(--color-ink);
+}
+.tab-on {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.tab-on::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--nacre);
+}
+
+/* ── 余额：高对比衬线 + 背后珠光光晕 ──────────────────── */
+.balance {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.balance-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(60% 70% at 50% 50%, rgba(246, 219, 226, 0.6), rgba(219, 231, 242, 0.4) 45%, transparent 72%);
+  filter: blur(26px);
+}
+
+/* ── logo 珠光描字 ────────────────────────────────── */
+.nacre-text {
+  background: linear-gradient(115deg, #c2a0ab, #ab9fc6, #9fb6c4, #9fc6b4, #c6b89a, #c2a0ab);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: nacre-sweep 9s ease-in-out infinite;
+}
+@keyframes nacre-sweep {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* 真·珍珠点 */
+.pearl-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background:
+    radial-gradient(40% 40% at 35% 30%, #ffffff 0%, transparent 55%),
+    conic-gradient(from 210deg, #eadfe6, #e0e6f0, #dceee6, #f0ecdc, #f3e0e6, #eadfe6);
+  box-shadow: inset 0 0 0 0.5px rgba(120, 100, 80, 0.2), 0 1px 2px rgba(70, 58, 40, 0.25);
+}
+
+/* ── 状态提示 ─────────────────────────────────────── */
+.note-ok {
+  border: 1px solid #cfe0d4;
+  background: #eef5ef;
+  color: var(--color-moss);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.note-warn {
+  border: 1px solid #e8dcc2;
+  background: #f7f0e0;
+  color: var(--color-bronze);
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-size: 12px;
+}
+.note-err {
+  border: 1px solid #e7cdcc;
+  background: #f7eceb;
+  color: var(--color-clay);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.pill {
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 5px 13px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--color-inksoft);
+}
+
+/* ── 载入逐层浮现 ─────────────────────────────────── */
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.reveal {
+  animation: reveal 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
